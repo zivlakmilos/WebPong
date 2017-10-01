@@ -8,22 +8,71 @@
 	<title>Web Pong | Milos Zivlak</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script src="/socket.io/socket.io.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="libraries/p5.js"></script>
+	<script src="libraries/p5.dom.js"></script>
+	<script src="libraries/p5.sound.js"></script>
 	<script src="player.js"></script>
 	<script src="ball.js"></script>
 	<script src="sketch.js"></script>
 
+	<script src="player.js"></script>
+	<script src="ball.js"></script>
+
 	<style>
-		body {
-			margin:0;
-			padding:0;
-			overflow: hidden;
-		}
-		canvas {
-			margin:auto;
-		}
-	</style>
+        body {
+            background: black;
+            color: #555555;
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+            var socket = io.connect();
+
+            socket.on("reciveAllRooms", function(data) {
+                $("#selectRoom").html("");
+                for(var i in data) {
+                    if(data[i].full == false) {
+                        $("#selectRoom").append("<option>" + data[i].name + "</option>");
+                    }
+                }
+            });
+
+            $("#btnCreateRoom").click(function() {
+                $("#divCreateRoom").show();
+                $("#divJoinRoom").hide();
+            });
+            $("#btnJoinRoom").click(function() {
+                $("#divJoinRoom").show();
+                $("#divCreateRoom").hide();
+
+                socket.emit("getAllRooms");
+            });
+
+            $("#btnCreate").click(function() {
+                var data = {
+                    roomName: $("#txtRoomName").val(),
+                    player: null
+                };
+                socket.emit("createRoom", data);
+            });
+        });
+    </script>
 </head>
 <body>
+    <button type="button" id="btnCreateRoom">Create room</button>
+    <button type="button" id="btnJoinRoom">Join room</button><br /><br />
+
+    <div id="divCreateRoom" style="display: none;">
+        <label for="txtRoomName"></label><input id="txtRoomName" type="text" value="" />
+        <button type="button" id="btnCreate">Create</button>
+    </div>
+
+    <div id="divJoinRoom" style="display: none;">
+        <select id="selectRoom" size="5" style="width: 250px;">
+        </select>
+        <br /><br />
+        <button type="button" id="btnJoin">Join</button>
+    </div>
 </body>
 </html>

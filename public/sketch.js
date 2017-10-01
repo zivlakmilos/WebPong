@@ -4,8 +4,11 @@ var ball;
 
 var socket;
 
+var canvasWidth = 800;
+var canvasHeight = 300;
+
 function setup() {
-	createCanvas(windowWidth, windowHeight);
+	createCanvas(canvasWidth, canvasHeight);
 	player1 = new Player(10, 100);
 	player2 = new Player(width - 10 - player1.width, 100);
 	ball = new Ball();
@@ -37,7 +40,7 @@ function keyReleased() {
 }
 
 function draw() {
-	background(0);
+	background(51);
 
 	player1.update();
 	player2.update();
