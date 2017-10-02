@@ -27,8 +27,6 @@ function keyPressed() {
 	} else if(keyCode == DOWN_ARROW) {
 		player1.moveDown(true);
 	}
-
-	return false;
 }
 
 function keyReleased() {

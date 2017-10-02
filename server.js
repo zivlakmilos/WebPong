@@ -3,6 +3,10 @@ var express = require("express");
 var app = express();
 var server = require("http").createServer(app);
 var io = require("socket.io").listen(server);
+var path = require("path");
+
+require(path.resolve(__dirname, "./public/player.js"));
+require(path.resolve(__dirname, "./public/ball.js"));
 
 var port = 3000;
 
@@ -37,13 +41,13 @@ io.sockets.on("connection", function(socket) {
 
     socket.on("joinRoom", function(data) {
         for(var i in rooms) {
-            if(room[i].room.name = data.roomName) {
-                if(room[i].room.full == false) {
-                    room[i].con2 = socket;
-                    room[i].room.player2 = data.player;
+            if(rooms[i].room.name = data.roomName) {
+                if(rooms[i].room.full == false) {
+                    rooms[i].con2 = socket;
+                    rooms[i].room.player2 = data.player;
 
-                    room[i].con1.emit("gameStarted", room.room);
-                    room[i].con2.emit("gameStarted", room.room);
+                    rooms[i].con1.emit("gameStarted", room.room);
+                    rooms[i].con2.emit("gameStarted", room.room);
                 }
                 break;
             }
@@ -59,3 +63,16 @@ io.sockets.on("connection", function(socket) {
         socket.emit("reciveAllRooms", r);
     });
 });
+
+setTimeout(function() {
+    for(i in rooms) {
+        if(rooms[i].room.full == true) {
+            rooms[i].room.ball.update();
+            rooms[i].room.player1.update();
+            rooms[i].room.player2.update();
+
+            rooms[i].con1.emit("update", rooms[i].room);
+            rooms[i].con2.emit("update", rooms[i].room);
+        }
+    }
+}, 50);

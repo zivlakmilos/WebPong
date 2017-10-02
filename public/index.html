@@ -24,6 +24,9 @@
             background: black;
             color: #555555;
         }
+        canvas {
+            display: none;
+        }
     </style>
     <script>
         $(document).ready(function() {
@@ -36,6 +39,13 @@
                         $("#selectRoom").append("<option>" + data[i].name + "</option>");
                     }
                 }
+            });
+
+            socket.on("gameStarted", function(data) {
+                $("canvas").show();
+            });
+
+            socket.on("update", function(data) {
             });
 
             $("#btnCreateRoom").click(function() {
@@ -55,6 +65,14 @@
                     player: null
                 };
                 socket.emit("createRoom", data);
+            });
+
+            $("#btnJoin").click(function() {
+                var data = {
+                    roomName: $("#selectRoom").val(),
+                    player: null
+                };
+                socket.emit("joinRoom", data);
             });
         });
     </script>
