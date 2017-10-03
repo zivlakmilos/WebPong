@@ -83,4 +83,12 @@ io.sockets.on("connection", function(socket) {
         }
     });
 
+    socket.on("gameOver", function(data) {
+        for(var i in rooms) {
+            if(rooms[i].room.name == data.room.name) {
+                rooms[i].con1.emit("gameOver", data.playerWin);
+                rooms[i].con2.emit("gameOver", data.playerWin);
+            }
+        }
+    });
 });

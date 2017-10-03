@@ -6,6 +6,7 @@ var me;
 var master;
 var room;
 var gameStarted;
+var gameOver;
 
 var socket;
 
@@ -20,6 +21,7 @@ function setup() {
 	me = player1;
 	master = false;
 	gameStarted = false;
+	gameOver = 0;
 
 	socket = io.connect();
 
@@ -32,13 +34,15 @@ function setup() {
 		if(master == true) {
 			player2.x = data.player2.x;
 			player2.y = data.player2.y;
-			console.log(data);
 		} else {
 			player1.x = data.player1.x;
 			player1.y = data.player1.y;
 			ball.x = data.ball.x;
 			ball.y = data.ball.y;
 		}
+	});
+	socket.on("gameOver", function(data) {
+		gameOver = data;
 	});
 }
 
@@ -59,14 +63,36 @@ function keyReleased() {
 }
 
 function draw() {
-	background(51);
-
 	if(gameStarted != true)
 		return;
+
+	if(gameOver > 0) {
+		background(0);
+		fill(255, 0, 0);
+		textSize(32);
+		text("Game Over", width / 2 - 50, height / 2);
+		text("Player " + gameOver + " win", width / 2 - 50,  height / 2 + 50);
+		return;
+	}
+
+	background(51);
 
 	me.update();
 	if(master) {
 		ball.update();
+
+		if(ball.x < 0) {
+			socket.emit("gameOver", { room: room, playerWin: 2 });
+		} else if(ball.x > width) {
+			socket.emit("gameOver", { room: room, playerWin: 2 });
+		}
+
+		if(player1.checkBallCollision(ball)) {
+			ball.speedX = random(1, 5);
+		} else if(player2.checkBallCollision(ball)) {
+			ball.speedX = random(-5, -1);
+		}
+
 		room.ball = ball;
 		room.player1 = player1;
 		socket.emit("updateMaster", room);

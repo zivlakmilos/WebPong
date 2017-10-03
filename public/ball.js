@@ -9,14 +9,6 @@ function Ball() {
         this.x += this.speedX;
         this.y += this.speedY;
 
-        if(this.x - this.r < 0) {
-            this.speedX *= -1;
-            this.x = this.r;
-        } else if(this.x + this.r > width) {
-            this.speedX *= -1;
-            this.x = width - this.r;
-        }
-
         if(this.y - this.r < 0) {
             this.speedY *= -1;
             this.y = this.r;
@@ -24,7 +16,6 @@ function Ball() {
             this.speedY *= -1;
             this.y = height - this.r;
         }
-
     }
 
     this.render = function() {

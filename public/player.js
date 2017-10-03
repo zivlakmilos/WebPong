@@ -21,6 +21,25 @@ function Player(x, y) {
         }
     }
 
+    this.checkBallCollision = function(ball) {
+        var distX = Math.abs(ball.x - this.x - this.width / 2);
+        var distY = Math.abs(ball.y - this.y - this.height / 2);
+
+        if(distX > (this.width / 2 + ball.r) ||
+           distY > (this.height / 2 + ball.r)) {
+            return false;
+        }
+
+        if(distX < rect.width / 2 ||
+           distY < rect.height / 2) {
+            return true;
+        }
+
+        var dx = distX - this.width / 2;
+        var dy = distY - this.height / 2;
+        return (dx * dx + dy * dy <= (ball.r * ball.r));
+    };
+
     this.update = function() {
         this.y += this.speedY;
         if(this.y < 0) {
