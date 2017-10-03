@@ -30,8 +30,6 @@
     </style>
     <script>
         $(document).ready(function() {
-            var socket = io.connect();
-
             socket.on("reciveAllRooms", function(data) {
                 $("#selectRoom").html("");
                 for(var i in data) {
@@ -42,10 +40,9 @@
             });
 
             socket.on("gameStarted", function(data) {
+                room = data;
+                gameStarted = true;
                 $("canvas").show();
-            });
-
-            socket.on("update", function(data) {
             });
 
             $("#btnCreateRoom").click(function() {
@@ -62,7 +59,8 @@
             $("#btnCreate").click(function() {
                 var data = {
                     roomName: $("#txtRoomName").val(),
-                    player: null
+                    player: player1,
+                    ball: ball
                 };
                 socket.emit("createRoom", data);
             });
@@ -70,8 +68,9 @@
             $("#btnJoin").click(function() {
                 var data = {
                     roomName: $("#selectRoom").val(),
-                    player: null
+                    player: player2
                 };
+                me = player2;
                 socket.emit("joinRoom", data);
             });
         });
