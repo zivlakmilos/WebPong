@@ -84,18 +84,3 @@ io.sockets.on("connection", function(socket) {
     });
 
 });
-
-/*
-setInterval(function() {
-    for(var i in rooms) {
-        if(rooms[i].room.full == true) {
-            rooms[i].room.ball.update();
-            rooms[i].room.player1.update();
-            rooms[i].room.player2.update();
-
-            rooms[i].con1.emit("update", rooms[i].room);
-            rooms[i].con2.emit("update", rooms[i].room);
-        }
-    }
-}, 50);
-*/
