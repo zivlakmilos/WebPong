@@ -84,7 +84,7 @@ function draw() {
 		if(ball.x < 0) {
 			socket.emit("gameOver", { room: room, playerWin: 2 });
 		} else if(ball.x > width) {
-			socket.emit("gameOver", { room: room, playerWin: 2 });
+			socket.emit("gameOver", { room: room, playerWin: 1 });
 		}
 
 		if(player1.checkBallCollision(ball)) {
